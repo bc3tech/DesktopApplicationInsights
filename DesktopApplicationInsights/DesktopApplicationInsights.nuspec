@@ -14,4 +14,8 @@
     <language>en-US</language>
     <tags>applicationinsights appinsights</tags>
   </metadata>
+  <files>
+    <file src="bin\$configuration$\BC3Technologies.DesktopApplicationInsights.pdb" target="lib\net45\BC3Technologies.DesktopApplicationInsights.pdb" />
+    <file src="bin\$configuration$\BC3Technologies.DesktopApplicationInsights.pdb" target="src\BC3Technologies.DesktopApplicationInsights.pdb" />
+  </files>
 </package>
