@@ -12,7 +12,7 @@ namespace DesktopApplicationInsights
     public static class Telemetry
     {
         private static TelemetryInitializer _initializer = new TelemetryInitializer(Assembly.GetCallingAssembly());
-        public static TelemetryClient Client { get; }
+        public static TelemetryClient Client { get; private set; }
 
         static Telemetry()
         {
