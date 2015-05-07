@@ -6,8 +6,12 @@
     <title>$title$</title>
     <authors>bc3tech</authors>
     <owners>BC3 Technologies</owners>
+    <projectUrl>https://github.com/bc3tech/DesktopApplicationInsights</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>$description$</description>
+    <description>Enables Microsoft Application Insights logging from Windows Desktop (Forms, Console, etc) applications</description>
+    <releaseNotes>Initial release. Beta 1</releaseNotes>
     <copyright>Copyright ©  2015</copyright>
+    <language>en-US</language>
+    <tags>applicationinsights appinsights</tags>
   </metadata>
 </package>
