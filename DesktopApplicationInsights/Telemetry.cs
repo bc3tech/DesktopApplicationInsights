@@ -9,9 +9,11 @@ using System.Windows.Forms;
 
 namespace DesktopApplicationInsights
 {
+    /// <summary>Root class providing easy access to <c>TelemetryClient</c> and global Telemetry Configuration</summary>
     public static class Telemetry
     {
         private static TelemetryInitializer _initializer = new TelemetryInitializer(Assembly.GetCallingAssembly());
+        /// <summary>Gets the global instance of the Telemetry Client for the application</summary>
         public static TelemetryClient Client { get; private set; }
 
         static Telemetry()
@@ -19,6 +21,12 @@ namespace DesktopApplicationInsights
             Client = new TelemetryClient();
         }
 
+        /// <summary>
+        /// Configures Telemetry for the currently running application creating a <c>TelemetryInitializer</c>
+        /// based on the calling assembly, wiring up unhandled exception tracking, and wiring up telemetry
+        /// data flushing when the application exits.
+        /// </summary>
+        /// <param name="instrumentationKey">The Application Insights instrumentation key. (eg: E8A15D89-9824-447C-9D9A-A5B21F316E3B)</param>
         public static void ConfigureApplication(string instrumentationKey)
         {
             _initializer = new TelemetryInitializer(Assembly.GetCallingAssembly());
@@ -43,6 +51,13 @@ namespace DesktopApplicationInsights
             };
         }
 
+        /// <summary>
+        /// Helper method providing easy access to logging a *handled* exception during program execution
+        /// </summary>
+        /// <param name="ex">The exception that has been handled</param>
+        /// <param name="severityLevel">The severity level to assign to the logged event</param>
+        /// <param name="message">The message.</param>
+        /// <param name="data">Any extra data desired to be associated with the exception's log entry</param>
         public static void LogHandledException(Exception ex, SeverityLevel severityLevel = SeverityLevel.Error,
             string message = null, IDictionary<string, string> data = null)
         {
