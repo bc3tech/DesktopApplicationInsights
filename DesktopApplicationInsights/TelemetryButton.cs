@@ -43,7 +43,8 @@ namespace DesktopApplicationInsights
                 telemetryData.Timestamp = startTime;
                 if (this.IsTimed)
                 {
-                    telemetryData.Metrics.Add("Duration", (DateTime.UtcNow - startTime).TotalMilliseconds);
+                    telemetryData.Metrics.Add(string.Concat(this.EventName, "_Duration"),
+                        (DateTime.UtcNow - startTime).TotalMilliseconds);
                 }
                 Telemetry.Client.TrackEvent(telemetryData);
             }
