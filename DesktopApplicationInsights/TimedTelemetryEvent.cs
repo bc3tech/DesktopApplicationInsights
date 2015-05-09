@@ -6,6 +6,7 @@ using System.Text;
 using System.IO;
 using System.Threading;
 using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.ApplicationInsights;
 
 namespace DesktopApplicationInsights
 {
@@ -18,20 +19,24 @@ namespace DesktopApplicationInsights
         private readonly string _eventName;
         private readonly IDictionary<string, string> _properties;
         private readonly IDictionary<string, double> _metrics;
+        private readonly TelemetryClient _client;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TimedTelemetryEvent"/> class.
+        /// Initializes a new instance of the <see cref="TimedTelemetryEvent" /> class.
         /// </summary>
+        /// <param name="client">The telemetry client to use to log the timed event(s).</param>
         /// <param name="eventName">Name of the event.</param>
         /// <param name="properties">Properties to tie to the event</param>
         /// <param name="metrics">Metrics to tie to the event</param>
-        public TimedTelemetryEvent(string eventName, IDictionary<string, string> properties = null,
+        public TimedTelemetryEvent(TelemetryClient client, string eventName,
+            IDictionary<string, string> properties = null,
             IDictionary<string, double> metrics = null)
         {
             _startTime = DateTime.UtcNow;
             _eventName = eventName;
             _properties = properties ?? new Dictionary<string, string>();
             _metrics = metrics ?? new Dictionary<string, double>();
+            _client = client;
         }
 
         #region IDisposable Support
@@ -58,7 +63,7 @@ namespace DesktopApplicationInsights
                     eventTelemetry.Metrics.Add(string.Concat(_eventName, "_Duration"),
                         (DateTime.UtcNow - _startTime).TotalMilliseconds);
 
-                    Telemetry.Client.TrackEvent(eventTelemetry);
+                    _client.TrackEvent(eventTelemetry);
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.

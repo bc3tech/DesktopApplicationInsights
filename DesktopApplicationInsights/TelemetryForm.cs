@@ -2,6 +2,7 @@
 using Microsoft.ApplicationInsights.Extensibility;
 using System;
 using System.Windows.Forms;
+using Microsoft.ApplicationInsights;
 
 namespace DesktopApplicationInsights
 {
@@ -9,7 +10,7 @@ namespace DesktopApplicationInsights
     /// Base class for forms who wish to track Telemetry data as a PageView event.
     /// Also applies duration to the logged entry
     /// </summary>
-    public class TelemetryForm : Form
+    public abstract class TelemetryForm : Form
     {
         private readonly PageViewTelemetry _telemetryData;
         private bool _viewLogged = false;
@@ -22,6 +23,11 @@ namespace DesktopApplicationInsights
             _telemetryData = new PageViewTelemetry(
                 !string.IsNullOrWhiteSpace(this.Name) ? this.Name : this.GetType().Name);
         }
+
+        /// <summary>
+        /// Gets the telemetry client used by this form for automatically logging PageView events
+        /// </summary>
+        protected abstract TelemetryClient TelemetryClient { get; }
 
         /// <summary>
         /// Raises the <see cref="E:Load" /> event.
@@ -50,7 +56,7 @@ namespace DesktopApplicationInsights
             if (!_viewLogged)
             {
                 _telemetryData.Duration = DateTime.UtcNow - _openTime;
-                Telemetry.Client.TrackPageView(_telemetryData);
+                this.TelemetryClient.TrackPageView(_telemetryData);
                 _viewLogged = true;
             }
         }

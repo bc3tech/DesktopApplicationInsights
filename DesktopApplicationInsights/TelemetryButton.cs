@@ -6,7 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.ApplicationInsights.Extensibility;
 
 namespace DesktopApplicationInsights
 {
@@ -27,6 +29,16 @@ namespace DesktopApplicationInsights
         [EditorBrowsable]
         public bool IsTimed { get; set; }
 
+        private TelemetryClient _telemetryClient;
+        /// <summary>
+        /// Sets the telemetry client used by the button to log telemetry data.
+        /// </summary>
+        /// <param name="client">The telemetry client to use.</param>
+        public void SetTelemetryClient(TelemetryClient client)
+        {
+            _telemetryClient = client;
+        }
+
         /// <summary>
         /// Raises the <see cref="E:Click" /> event.
         /// </summary>
@@ -34,7 +46,6 @@ namespace DesktopApplicationInsights
         protected override void OnClick(EventArgs e)
         {
             var startTime = DateTime.UtcNow;
-
             base.OnClick(e);
 
             if (!string.IsNullOrWhiteSpace(this.EventName))
@@ -46,7 +57,7 @@ namespace DesktopApplicationInsights
                     telemetryData.Metrics.Add(string.Concat(this.EventName, "_Duration"),
                         (DateTime.UtcNow - startTime).TotalMilliseconds);
                 }
-                Telemetry.Client.TrackEvent(telemetryData);
+                _telemetryClient.TrackEvent(telemetryData);
             }
         }
     }
