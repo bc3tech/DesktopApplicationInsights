@@ -10,7 +10,7 @@ namespace DesktopApplicationInsights
     /// Base class for forms who wish to track Telemetry data as a PageView event.
     /// Also applies duration to the logged entry
     /// </summary>
-    public abstract class TelemetryForm : Form
+    public class TelemetryForm : Form
     {
         private readonly PageViewTelemetry _telemetryData;
         private bool _viewLogged = false;
@@ -27,7 +27,7 @@ namespace DesktopApplicationInsights
         /// <summary>
         /// Gets the telemetry client used by this form for automatically logging PageView events
         /// </summary>
-        protected abstract TelemetryClient TelemetryClient { get; }
+        protected TelemetryClient TelemetryClient { get; set; }
 
         /// <summary>
         /// Raises the <see cref="E:Load" /> event.
