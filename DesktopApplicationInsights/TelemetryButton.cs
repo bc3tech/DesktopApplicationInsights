@@ -29,14 +29,38 @@ namespace DesktopApplicationInsights
         [EditorBrowsable]
         public bool IsTimed { get; set; }
 
+        /// <summary>
+        /// Gets or sets the name of the telemetry client used by the button
+        /// </summary>
+        [EditorBrowsable]
+        public string TelemetryClientName { get; set; }
+
         private TelemetryClient _telemetryClient;
         /// <summary>
-        /// Sets the telemetry client used by the button to log telemetry data.
+        /// Called when [create control].
         /// </summary>
-        /// <param name="client">The telemetry client to use.</param>
-        public void SetTelemetryClient(TelemetryClient client)
+        protected override void OnCreateControl()
         {
-            _telemetryClient = client;
+            if (!this.DesignMode)
+            {
+                System.Diagnostics.Debug.Assert(!string.IsNullOrWhiteSpace(this.TelemetryClientName),
+                    string.Format("No Telemetry client name set on Telemetry Button \"{0}\"", this.Name));
+
+                if (!string.IsNullOrWhiteSpace(this.TelemetryClientName))
+                {
+                    try
+                    {
+                        _telemetryClient = Telemetry.GetClient(this.TelemetryClientName);
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.Fail(string.Format("Couldn't find telemetry client with name {0}",
+                            this.TelemetryClientName));
+                    }
+                }
+            }
+
+            base.OnCreateControl();
         }
 
         /// <summary>
@@ -45,19 +69,22 @@ namespace DesktopApplicationInsights
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected override void OnClick(EventArgs e)
         {
-            var startTime = DateTime.UtcNow;
-            base.OnClick(e);
-
-            if (!string.IsNullOrWhiteSpace(this.EventName))
+            if (_telemetryClient != null)
             {
-                var telemetryData = new EventTelemetry(this.EventName);
-                telemetryData.Timestamp = startTime;
-                if (this.IsTimed)
+                var startTime = DateTime.UtcNow;
+                base.OnClick(e);
+
+                if (!string.IsNullOrWhiteSpace(this.EventName))
                 {
-                    telemetryData.Metrics.Add(string.Concat(this.EventName, "_Duration"),
-                        (DateTime.UtcNow - startTime).TotalMilliseconds);
+                    var telemetryData = new EventTelemetry(this.EventName);
+                    telemetryData.Timestamp = startTime;
+                    if (this.IsTimed)
+                    {
+                        telemetryData.Metrics.Add(string.Concat(this.EventName, "_Duration"),
+                            (DateTime.UtcNow - startTime).TotalMilliseconds);
+                    }
+                    _telemetryClient.TrackEvent(telemetryData);
                 }
-                _telemetryClient.TrackEvent(telemetryData);
             }
         }
     }
