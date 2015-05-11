@@ -57,9 +57,5 @@ using (new TimedTelemetryEvent(myClient, "EventFire"))
 ```
 This creates a Custom Event in App Insights with the name "EventFire" and logs the duration it took to, in his case, throw the exception (which gets logged as an Unhandled Exception as it crashes the app).
 ## Tracking button clicks
-You can very easily log - and optionall *time* - button click events by having your `Button` inherit from `TelemetryButton` and set the `EventName` property on your Button. Then after the `InitializeComponent()` call within your `Form` object, add:
-```
-// you've done var myClient = Telemetry.CreateClient() somewhere
-this.button1.SetTelemetryClient(myClient);
-```
+You can very easily log - and optionall *time* - button click events by having your `Button` inherit from `TelemetryButton` and set the `EventName` and `TelemetryClientName` properties on your Button.
 Your button will now automatically execute `TrackEvent` when it's clicked. If you set the `IsTimed` property to `true` it will also log duration metrics. The Duration property that's logged to Application Insights will be called `[EventName]_Duration` so you can filter these button click durations very easily in your dashboard.
