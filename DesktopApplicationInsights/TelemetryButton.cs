@@ -55,7 +55,7 @@ namespace DesktopApplicationInsights
                     catch (Exception ex)
                     {
                         System.Diagnostics.Debug.Fail(string.Format("Couldn't find telemetry client with name {0}",
-                            this.TelemetryClientName));
+                            this.TelemetryClientName), ex.ToString());
                     }
                 }
             }
