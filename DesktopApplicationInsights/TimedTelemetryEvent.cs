@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections;
+﻿using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.DataContracts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.IO;
-using System.Threading;
-using Microsoft.ApplicationInsights.DataContracts;
-using Microsoft.ApplicationInsights;
 
 namespace DesktopApplicationInsights
 {
@@ -17,9 +13,13 @@ namespace DesktopApplicationInsights
     {
         private readonly DateTime _startTime;
         private readonly string _eventName;
-        private readonly IDictionary<string, string> _properties;
-        private readonly IDictionary<string, double> _metrics;
         private readonly TelemetryClient _client;
+
+        /// <summary>Gets the properties.</summary>
+        public IDictionary<string, string> Properties { get; private set; }
+
+        /// <summary>Gets the metrics.</summary>
+        public IDictionary<string, double> Metrics { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TimedTelemetryEvent" /> class.
@@ -34,8 +34,8 @@ namespace DesktopApplicationInsights
         {
             _startTime = DateTime.UtcNow;
             _eventName = eventName;
-            _properties = properties ?? new Dictionary<string, string>();
-            _metrics = metrics ?? new Dictionary<string, double>();
+            this.Properties = properties ?? new Dictionary<string, string>();
+            this.Metrics = metrics ?? new Dictionary<string, double>();
             _client = client;
         }
 
@@ -57,9 +57,9 @@ namespace DesktopApplicationInsights
                         Timestamp = _startTime,
                     };
 
-                    _properties.ToList().ForEach(p => eventTelemetry.Properties.Add(p));
+                    this.Properties.ToList().ForEach(p => eventTelemetry.Properties.Add(p));
 
-                    _metrics.ToList().ForEach(m => eventTelemetry.Metrics.Add(m));
+                    this.Metrics.ToList().ForEach(m => eventTelemetry.Metrics.Add(m));
                     eventTelemetry.Metrics.Add(string.Concat(_eventName, "_Duration"),
                         (DateTime.UtcNow - _startTime).TotalMilliseconds);
 
