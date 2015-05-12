@@ -4,11 +4,10 @@ Enables easy and automatic usage of Application Insights with your Windows Forms
 1. Create a new Windows desktop application (Forms, Console, etc)
 2. Add the `BC3Technologies.DesktopApplicationInsights` [nuget package](https://www.nuget.org/packages/BC3Technologies.DesktopApplicationInsights/) to the project
 3. Create a `TelemetryClient` object in your code with:
-
 ```
 var myClient = Telemetry.CreateClient("<name to give the client>", "<instrumentation key from App Insights project>");
 ```
-
+In most Desktop apps, if you plan to use just one client throughout the app you can put this line in `Program.cs`' `Main()` method.
 This does the following: 
 
 1. Pulls version number, OS, screen resolutions, etc in to the context of your Telemetry calls.
@@ -27,15 +26,16 @@ myClient.TrackEvent(string);
 ```
 This goes directly against the Application Insights Core API, so a `properties`, `metrics`, etc are all also present, etc.
 ## Automatic Page View tracking
-You can automatically track "Page Views" in a Windows Forms app by making your Form inherit from `TelemetryForm` and setting its `TelemetryClient` property. By doing this you'll get Page View events logged to App Insights **with duration information**.
+You can automatically track "Page Views" in a Windows Forms app by making your Form inherit from `TelemetryForm` and setting its `TelemetryClientName` property. By doing this you'll get Page View events logged to App Insights **with duration information**.
 ### Example
 ```csharp
 public partial class Form1 : TelemetryForm
 {
     public Form1()
     {
-        this.TelemetryClient = Telemetry.CreateClient("form1Client");
+        this.TelemetryClientName = "form1Client";
 ```
+Or you can even use the Designer for your Form to set the property even more easily.
 ## Logging Handled Exceptions
 To make your life easier and reduce boilerplate code, logging a **handled** exception can be done simply with
 ```csharp
