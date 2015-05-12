@@ -12,16 +12,16 @@ using Microsoft.ApplicationInsights;
 namespace DesktopApplicationInsights
 {
     /// <summary>
-    /// Base control class with built-in Telemetry wireup
+    /// Base Control class with built-in Telemetry wireup
     /// </summary>
-    public abstract class TelemetryControl : Control
+    public class TelemetryControl : Control
     {
         private readonly Lazy<TelemetryClient> _telemetryClientFetcher;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TelemetryUserControl"/> class.
+        /// Initializes a new instance of the <see cref="TelemetryControl"/> class.
         /// </summary>
-        protected TelemetryControl() : base()
+        public TelemetryControl() : base()
         {
             _telemetryClientFetcher = new Lazy<TelemetryClient>(() =>
             {
@@ -48,8 +48,8 @@ namespace DesktopApplicationInsights
         /// <summary>
         /// Gets or sets the name of the telemetry client used by the button
         /// </summary>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        protected abstract string TelemetryClientName { get; }
+        [EditorBrowsable]
+        public string TelemetryClientName { get; set; }
 
         /// <summary>
         /// Gets the telemetry client.
