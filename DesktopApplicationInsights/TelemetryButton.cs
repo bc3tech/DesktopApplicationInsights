@@ -13,7 +13,6 @@ using Microsoft.ApplicationInsights.Extensibility;
 namespace DesktopApplicationInsights
 {
     /// <summary>A <c>Button</c> class that automatically logs telemetry data when clicked</summary>
-    [DesignTimeVisible]
     public class TelemetryButton : Button
     {
         private readonly Lazy<TelemetryClient> _telemetryClientFetcher;
