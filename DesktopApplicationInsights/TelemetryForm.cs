@@ -87,7 +87,7 @@ namespace DesktopApplicationInsights
 
         private void LogPageView()
         {
-            if (!_viewLogged)
+            if (!this.DesignMode && !_viewLogged)
             {
                 _telemetryData.Duration = DateTime.UtcNow - _openTime;
                 this.TelemetryClient.TrackPageView(_telemetryData);
