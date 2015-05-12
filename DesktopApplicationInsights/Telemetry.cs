@@ -13,7 +13,7 @@ namespace DesktopApplicationInsights
     /// <summary>Root class providing easy access to <c>TelemetryClient</c> and global Telemetry Configuration</summary>
     public static class Telemetry
     {
-        private static Dictionary<string, TelemetryClient> _clients = new Dictionary<string, TelemetryClient>();
+        private static Dictionary<string, Tuple<TelemetryClient, TelemetryConfiguration>> _clientsAndConfigs = new Dictionary<string, Tuple<TelemetryClient, TelemetryConfiguration>>();
         /// <summary>
         /// Creates the client.
         /// </summary>
@@ -33,14 +33,14 @@ namespace DesktopApplicationInsights
         private static TelemetryClient CreateClient(string clientName, string instrumentationKey,
             Assembly sourceAssembly)
         {
-            if (_clients.ContainsKey(clientName))
+            if (_clientsAndConfigs.ContainsKey(clientName))
             {
                 throw new ArgumentException(
                     string.Format("A client already exists with name \"{0}\". Use GetClient() to retrieve it.", clientName),
                     "clientName");
             }
 
-            if (_clients.Any(c => c.Value.InstrumentationKey.Equals(instrumentationKey, StringComparison.OrdinalIgnoreCase)))
+            if (_clientsAndConfigs.Any(c => c.Value.Item1.InstrumentationKey.Equals(instrumentationKey, StringComparison.OrdinalIgnoreCase)))
             {
                 throw new ArgumentException(
                     "A client already exists with the given instrumentation key.", "instrumentationKey");
@@ -51,7 +51,7 @@ namespace DesktopApplicationInsights
             ConfigureApplication(instrumentationKey, client, config,
                 new TelemetryInitializer(sourceAssembly));
 
-            _clients.Add(clientName, client);
+            _clientsAndConfigs.Add(clientName, Tuple.Create(client, config));
 
             return client;
         }
@@ -67,12 +67,12 @@ namespace DesktopApplicationInsights
         /// </exception>
         public static TelemetryClient GetOrCreateClient(string clientName, string instrumentationKey)
         {
-            TelemetryClient client;
-            if (!_clients.TryGetValue(clientName, out client))
+            Tuple<TelemetryClient, TelemetryConfiguration> clientWithConfig;
+            if (!_clientsAndConfigs.TryGetValue(clientName, out clientWithConfig))
             {
-                client = CreateClient(clientName, instrumentationKey, Assembly.GetCallingAssembly());
+                CreateClient(clientName, instrumentationKey, Assembly.GetCallingAssembly());
             }
-            return client;
+            return _clientsAndConfigs[clientName].Item1;
         }
 
         /// <summary>
@@ -83,19 +83,18 @@ namespace DesktopApplicationInsights
         /// <exception cref="ArgumentException">No client has been crated with name &lt;name&gt;;clientName</exception>
         public static TelemetryClient GetClient(string clientName)
         {
-            TelemetryClient client;
-            if (!_clients.TryGetValue(clientName, out client))
+            Tuple<TelemetryClient, TelemetryConfiguration> clientWithConfig;
+            if (!_clientsAndConfigs.TryGetValue(clientName, out clientWithConfig))
             {
                 throw new ArgumentException(string.Format("No client has been created with name \"{0}\"", clientName), "clientName");
             }
 
-            return client;
+            return clientWithConfig.Item1;
         }
 
         private static void ConfigureApplication(string instrumentationKey,
             TelemetryClient client, TelemetryConfiguration config, TelemetryInitializer initializer)
         {
-            config = config ?? TelemetryConfiguration.Active;
             config.InstrumentationKey = instrumentationKey;
             config.ContextInitializers.Add(initializer);
 
@@ -140,6 +139,24 @@ namespace DesktopApplicationInsights
             }
 
             client.TrackException(o);
+        }
+
+        /// <summary>
+        /// Disables the specified client.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        public static void Disable(this TelemetryClient client)
+        {
+            _clientsAndConfigs.Single(c => c.Value.Item1 == client).Value.Item2.DisableTelemetry = true;
+        }
+
+        /// <summary>
+        /// Enables the specified client.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        public static void Enable(this TelemetryClient client)
+        {
+            _clientsAndConfigs.Single(c => c.Value.Item1 == client).Value.Item2.DisableTelemetry = false;
         }
     }
 
