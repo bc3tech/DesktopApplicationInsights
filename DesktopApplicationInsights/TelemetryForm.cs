@@ -3,6 +3,7 @@ using Microsoft.ApplicationInsights.Extensibility;
 using System;
 using System.Windows.Forms;
 using Microsoft.ApplicationInsights;
+using System.ComponentModel;
 
 namespace DesktopApplicationInsights
 {
@@ -13,8 +14,11 @@ namespace DesktopApplicationInsights
     public class TelemetryForm : Form
     {
         private readonly PageViewTelemetry _telemetryData;
+        private readonly Lazy<TelemetryClient> _telemetryClientFetcher;
+
         private bool _viewLogged = false;
         private DateTime _openTime = DateTime.UtcNow;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TelemetryForm"/> class.
         /// </summary>
@@ -22,12 +26,42 @@ namespace DesktopApplicationInsights
         {
             _telemetryData = new PageViewTelemetry(
                 !string.IsNullOrWhiteSpace(this.Name) ? this.Name : this.GetType().Name);
+
+            _telemetryClientFetcher = new Lazy<TelemetryClient>(() =>
+            {
+                System.Diagnostics.Debug.Assert(!string.IsNullOrWhiteSpace(this.TelemetryClientName),
+                    string.Format("No Telemetry client name set on Telemetry Button \"{0}\"", this.Name));
+
+                if (!string.IsNullOrWhiteSpace(this.TelemetryClientName))
+                {
+                    try
+                    {
+                        return Telemetry.GetClient(this.TelemetryClientName);
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.Fail(string.Format("Couldn't find telemetry client with name {0}",
+                            this.TelemetryClientName), ex.ToString());
+                    }
+                }
+
+                return null;
+            });
         }
 
         /// <summary>
-        /// Gets the telemetry client used by this form for automatically logging PageView events
+        /// Gets or sets the name of the telemetry client used by the button
         /// </summary>
-        protected TelemetryClient TelemetryClient { get; set; }
+        [EditorBrowsable]
+        public string TelemetryClientName { get; set; }
+
+        /// <summary>
+        /// Gets the telemetry client.
+        /// </summary>
+        protected TelemetryClient TelemetryClient
+        {
+            get { return _telemetryClientFetcher.Value; }
+        }
 
         /// <summary>
         /// Raises the <see cref="E:Load" /> event.
