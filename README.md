@@ -59,3 +59,5 @@ This creates a Custom Event in App Insights with the name "EventFire" and logs t
 ## Tracking button clicks
 You can very easily log - and optionall *time* - button click events by having your `Button` inherit from `TelemetryButton` and set the `EventName` and `TelemetryClientName` properties on your Button.
 Your button will now automatically execute `TrackEvent` when it's clicked. If you set the `IsTimed` property to `true` it will also log duration metrics. The Duration property that's logged to Application Insights will be called `[EventName]_Duration` so you can filter these button click durations very easily in your dashboard.
+## Disabling Telemetry
+Once you have a client via the `GetClient`, `CreateClient`, or `GetOrCreateClient` methods, you can use the `Disable()` and `Enable()` extension methods off `TelemetryClient` to Disable or Enable all telemetry events sent to that client. This is useful if you provide an option within your application to turn telemetry on or off, but don't want to put a bunch of `if` statements everywhere to check a boolean value before calling telemetry methods.
