@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.22823.1
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopApplicationInsights", "DesktopApplicationInsights\DesktopApplicationInsights.csproj", "{A56338BA-AC8C-46C8-8D24-0C5098EBE9E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{9426A28D-7A9A-4A07-ADF4-427C4C12191F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{A56338BA-AC8C-46C8-8D24-0C5098EBE9E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A56338BA-AC8C-46C8-8D24-0C5098EBE9E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A56338BA-AC8C-46C8-8D24-0C5098EBE9E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9426A28D-7A9A-4A07-ADF4-427C4C12191F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9426A28D-7A9A-4A07-ADF4-427C4C12191F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9426A28D-7A9A-4A07-ADF4-427C4C12191F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9426A28D-7A9A-4A07-ADF4-427C4C12191F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

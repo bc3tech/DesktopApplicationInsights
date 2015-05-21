@@ -1,10 +1,10 @@
-﻿using System.Linq;
-using Microsoft.ApplicationInsights;
+﻿using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -181,7 +181,7 @@ namespace DesktopApplicationInsights
 
             context.Properties.Add("64BitOS", Environment.Is64BitOperatingSystem.ToString());
             context.Properties.Add("64BitProcess", Environment.Is64BitProcess.ToString());
-            context.Properties.Add("MachineName", Environment.MachineName);
+            context.Properties.Add("Machine name", Environment.MachineName);
             context.Properties.Add("ProcessorCount", Environment.ProcessorCount.ToString());
             context.Properties.Add("ClrVersion", Environment.Version.ToString());
 
