@@ -9,7 +9,7 @@
     <projectUrl>https://github.com/bc3tech/DesktopApplicationInsights</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Enables Microsoft Application Insights logging from Windows Desktop (Forms, Console, etc) applications</description>
-    <releaseNotes>Initial release. Beta 1</releaseNotes>
+    <releaseNotes>Point release 3. Beta 4. Fixed "MachineName" event property -> "Machine name"</releaseNotes>
     <copyright>Copyright ©  2015</copyright>
     <language>en-US</language>
     <tags>applicationinsights appinsights</tags>
